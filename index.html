@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BeritaKu - Portal Berita Terkini</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <style>
+      /* Variabel Warna & Font */
+      :root {
+        --bg-body: #f5f1e7; /* Warna background krem */
+        --primary-brown: #8b7342; /* Warna navbar */
+        --dark-brown: #5d4b27; /* Warna tombol */
+        --text-dark: #1a1a1a;
+        --text-muted: #6c757d;
+        --font-serif: "Lora", serif;
+        --font-sans: "Inter", sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-body); /* Warna dasar krem untuk sisa halaman bawah */
+        background-image: linear-gradient(to bottom, #ffcf77 0px, #ffcf77 475px, transparent 475px); /* Warna FFCF77 setinggi 475px */
+        background-repeat: no-repeat;
+        font-family: var(--font-sans);
+        color: var(--text-dark);
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      .brand-logo {
+        font-family: var(--font-serif);
+      }
+
+      /* Header & Navigasi */
+      .brand-logo {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        text-decoration: none;
+      }
+
+      .search-btn {
+        background-color: var(--dark-brown);
+        color: white;
+        border: none;
+      }
+      .search-btn:hover {
+        background-color: #4a3c1f;
+        color: white;
+      }
+
+      .main-nav {
+        background-color: var(--primary-brown);
+      }
+      .main-nav .nav-link {
+        color: white;
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+      }
+      .main-nav .nav-link:hover {
+        color: #e0d5c1;
+      }
+      .weather-info {
+        color: white;
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      /* Komponen Gambar overlay */
+      .image-overlay-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0;
+        border: none;
+      }
+      .image-overlay-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .overlay-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
+        color: white;
+        padding: 20px;
+      }
+
+      /* Hero Section Spesifik */
+      .hero-carousel {
+        height: 400px;
+      }
+      .hero-carousel img {
+        height: 400px;
+        object-fit: cover;
+      }
+
+      /* Kartu Berita Standar */
+      .news-card {
+        background: transparent;
+        border: none;
+        margin-bottom: 20px;
+      }
+      .news-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        margin-bottom: 10px;
+      }
+      .news-card h5 {
+        font-weight: 700;
+        font-size: 1.1rem;
+        line-height: 1.4;
+        margin-bottom: 8px;
+      }
+      .news-card p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 5px;
+      }
+      .author-date {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      /* Section Title dengan Garis */
+      .section-title {
+        display: flex;
+        align-items: center;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+      }
+      .section-title::after {
+        content: "";
+        flex: 1;
+        margin-left: 1rem;
+        height: 1px;
+        background-color: #ccc;
+      }
+
+      /* Sidebar Trending */
+      .trending-item {
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+      }
+      .trending-item:last-child {
+        border-bottom: none;
+      }
+      .trending-img {
+        width: 80px;
+        height: 60px;
+        object-fit: cover;
+      }
+      .trending-title {
+        font-family: var(--font-serif);
+        font-weight: 600;
+        font-size: 0.95rem;
+        line-height: 1.3;
+        margin-bottom: 5px;
+      }
+
+      /* Footer */
+      footer {
+        background-color: #111;
+        color: #aaa;
+        padding: 40px 0;
+        font-size: 0.85rem;
+        margin-top: 50px;
+      }
+      footer .brand-logo {
+        color: white;
+        font-size: 2rem;
+      }
+      footer a {
+        color: #aaa;
+        text-decoration: none;
+      }
+      footer a:hover {
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="container px-0 py-4 d-flex justify-content-between align-items-center">
+      <a href="#" class="brand-logo">BeritaKu</a>
+      <div class="d-flex w-50 justify-content-end">
+        <input type="text" class="form-control rounded-0 w-50" placeholder="Cari judul berita..." />
+        <button class="btn search-btn rounded-0 px-4">Cari</button>
+      </div>
+    </header>
+    <nav class="container main-nav px-4 d-flex justify-content-between align-items-center flex-wrap">
+      <ul class="nav">
+        <li class="nav-item"><a class="nav-link px-2" href="#">Politik</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="#">Dunia</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="#">Ekonomi</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="#">Sains & Teknologi</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="#">Bisnis</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="#">Travel</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="#">Iklim</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="#">Gaya Hidup</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="#">Makanan</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="#">Olahraga</a></li>
+      </ul>
+      <div class="weather-info d-none d-md-block">15:40 &nbsp;|&nbsp; 24 °C</div>
+    </nav>
+    <div class="container px-0 md-3 mb-md-5">
+      <div class="p-2 mt-2">
+        <!-- Bagian Atas -->
+        <div class="row g-3 mb-4 bg-white">
+          <div class="col-lg-6">
+            <div id="heroCarousel" class="carousel slide image-overlay-card hero-carousel" data-bs-ride="carousel">
+              <div class="carousel-indicators">
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3"></button>
+              </div>
+              <div class="carousel-inner h-100">
+                <a href="" class="carousel-item active h-100 text-decoration-none text-reset">
+                  <img src="https://images.unsplash.com/photo-1590343166567-074092b77a06?auto=format&fit=crop&q=80&w=800" alt="Biden" />
+                  <div class="overlay-content">
+                    <h2 class="mb-2">Partai Demokrat Merombak Kalender Pemilihan Pendahuluan Partai, Menggulingkan Tradisi Politik</h2>
+                    <div class="author-date text-light opacity-75">Oleh Gimmy Davis &nbsp;|&nbsp; Feb 4, 2023</div>
+                  </div>
+                </a>
+
+                <a href="" class="carousel-item h-100 text-decoration-none text-reset">
+                  <img src="https://images.unsplash.com/photo-1508385082359-f0ac1b9b7d8a?auto=format&fit=crop&q=80&w=800" alt="Ekonomi" />
+                  <div class="overlay-content">
+                    <h2 class="mb-2">Pemulihan Ekonomi Cenderung Melambat, Pemerintah Siapkan Paket Stimulus Baru</h2>
+                    <div class="author-date text-light opacity-75">Oleh Siti Rahma &nbsp;|&nbsp; Mar 12, 2023</div>
+                  </div>
+                </a>
+
+                <a href="" class="carousel-item h-100 text-decoration-none text-reset">
+                  <img src="https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&fit=crop&q=80&w=800" alt="Teknologi" />
+                  <div class="overlay-content">
+                    <h2 class="mb-2">Startup Lokal Meluncurkan Teknologi Ramah Lingkungan untuk Pengolahan Sampah</h2>
+                    <div class="author-date text-light opacity-75">Oleh Andi Pratama &nbsp;|&nbsp; Apr 2, 2023</div>
+                  </div>
+                </a>
+
+                <a href="" class="carousel-item h-100 text-decoration-none text-reset">
+                  <img src="https://images.unsplash.com/photo-1530629013299-6cb70ff62f6f?auto=format&fit=crop&q=80&w=800" alt="Travel" />
+                  <div class="overlay-content">
+                    <h2 class="mb-2">Destinasi Wisata Baru Menarik Minat Wisatawan Domestik Musim Ini</h2>
+                    <div class="author-date text-light opacity-75">Oleh Maria Hapsari &nbsp;|&nbsp; May 1, 2023</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <a href="" class="d-flex border-bottom pb-3 mt-3 text-decoration-none text-reset">
+              <div class="pe-3">
+                <h6 class="fw-bold mb-1">Philomena Cunk Cukup Aneh untuk Menaklukan Dunia</h6>
+                <p class="text-muted small mb-0" style="font-size: 0.75rem">Serial Netflix terbaru "Cunk on Earth" tampak seperti film dokumenter BBC yang ambisius...</p>
+              </div>
+              <img src="https://images.unsplash.com/photo-1533689476487-034f57831a58?auto=format&fit=crop&q=80&w=150" alt="Thumb" style="width: 120px; height: 70px; object-fit: cover" />
+            </a>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="bg-dark text-white p-3 mb-3 d-flex justify-content-end" style="height: 61%">
+              <h5 class="mb-1 text-white fs-6 col">
+                Menteri Luar Negeri Antony J. Blinken pada hari Jumat membatalkan perjalanan akhir pekan ke Beijing setelah sebuah balon mata-mata Tiongkok terlihat di atas negara bagian Montana di Pegunungan Rocky, yang memicu hiruk-pikuk
+                pemberitaan media dan komentar politik atas sebuah mesin yang menurut Pentagon tidak menimbulkan ancaman bagi Amerika Serikat.
+              </h5>
+              <a href="" class="image-overlay-card w-50 col-3" style="height: 250px">
+                <img src="https://cdn.mos.cms.futurecdn.net/dXCwz2v2zcgQsFbEPSocab-1200-80.jpg.webp" alt="Protes" />
+                <div class="overlay-content p-3">
+                  <h5 class="mb-1 text-white fs-12">Kehebohan atas balon mata-mata China menyebabkan krisis diplomatik.</h5>
+                </div>
+              </a>
+            </div>
+            <a href="" class="d-flex bg-light text-decoration-none text-reset">
+              <div
+                class="bg-secondary text-white p-3 d-flex flex-column justify-content-center align-items-center"
+                style="
+                  width: 40%;
+                  background-image: url(&quot;https://images.unsplash.com/photo-1558204692-5f402fe220b9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&quot;);
+                  background-size: cover;
+                  background-position: center;
+                  background-repeat: no-repeat;
+                "
+              >
+                <span class="small text-center"></span>
+              </div>
+              <div class="p-3" style="width: 60%">
+                <h6 class="fw-bold fs-6 mb-2">Semakin Banyak Bandara Akan Menggunakan Pendekatan Pendaratan 'Meluncur' yang Lebih Ramah Lingkungan</h6>
+                <div class="author-date mb-2">Oleh Gimmy Davis &nbsp;|&nbsp; Feb 4, 2023</div>
+                <p class="text-danger small mb-0">Undang-Undang Penghentian Masalah Tidak Produktif dalam Pekerjaan Kantor Rumah...</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Setengah Bawah -->
+        <div class="row g-3">
+          <div class="col-lg-8">
+            <h2 class="section-title">Berita Terbaru</h2>
+
+            <div class="row g-4">
+              <a href="" class="col-md-6 text-decoration-none text-reset">
+                <div class="image-overlay-card mb-3" style="height: 250px">
+                  <img
+                    src="https://media.gettyimages.com/id/164502756/photo/dubai-uae-former-pakistani-president-pervez-musharraf-salutes-as-he-arrives-to-brief-media-and.jpg?s=612x612&w=0&k=20&c=73ZdZWy24jeaqdMcfpyjP1dZVt-qK1Wuvy0ExxaaS9g=  "
+                    alt="Militer"
+                  />
+                  <div class="overlay-content p-3">
+                    <h5 class="mb-1 text-white fs-6">Pervez Musharraf, Mantan Penguasa Militer Pakistan, Meninggal Dunia pada Usia 79 Tahun</h5>
+                    <div class="author-date text-light opacity-75">Oleh Gimmy Davis &nbsp;|&nbsp; Feb 4, 2023</div>
+                  </div>
+                </div>
+              </a>
+              <a href="" class="col-md-6 text-decoration-none text-reset">
+                <div class="image-overlay-card mb-3" style="height: 250px">
+                  <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&q=80&w=400" alt="Protes" />
+                  <div class="overlay-content p-3">
+                    <h5 class="mb-1 text-white fs-6">Kekhawatiran meningkat seputar kasus pil aborsi yang dianggap 'bencana' menjelang keputusan.</h5>
+                    <div class="author-date text-light opacity-75">Oleh Gimmy Davis &nbsp;|&nbsp; Feb 4, 2023</div>
+                  </div>
+                </div>
+              </a>
+              <a href="" class="col-md-6 text-decoration-none text-reset">
+                <div class="bg-light p-3">
+                  <h5 class="fw-bold">London ke Istanbul dengan kereta api: Petualangan kereta api selama 10 hari ini adalah impian para pelancong yang menyukai perjalanan santai.</h5>
+                  <div class="author-date mb-2">Oleh Gimmy Davis &nbsp;|&nbsp; Feb 4, 2023</div>
+                  <p class="small text-muted">Perjalanan kereta api romantis lintas Eropa telah lama dikaitkan dengan Orient Express. Namun, Anda tidak perlu lagi mengeluarkan ribuan dolar untuk melakukan perjalanan legendaris ini.</p>
+                </div>
+              </a>
+
+              <a href="" class="col-md-6 text-decoration-none text-reset">
+                <div class="bg-light p-3">
+                  <h5 class="fw-bold">Semakin Banyak Bandara Akan Menggunakan Pendekatan Pendaratan 'Meluncur' yang Lebih Ramah Lingkungan</h5>
+                  <div class="author-date mb-2">Oleh Gimmy Davis &nbsp;|&nbsp; Feb 4, 2023</div>
+                  <p class="small text-muted">
+                    Sebelas bandara AS lainnya berencana untuk mengadopsi cara baru pendaratan pesawat yang mengurangi emisi dan kebisingan — semuanya dengan cara pesawat yang datang mematikan mesinnya dan meluncur ke landasan.
+                  </p>
+                </div>
+              </a>
+
+              <a href="" class="col-md-6 text-decoration-none text-reset">
+                <div class="image-overlay-card" style="height: 250px">
+                  <img src="https://images.unsplash.com/photo-1657613738802-3ea1df973a8b?q=80&w=1170&auto=format&fit=crop&q=80&w=400" alt="Makanan" />
+                  <div class="overlay-content p-3">
+                    <h5 class="mb-1 text-white fs-6">10 cara untuk menyederhanakan persiapan makanan agar memasak di malam hari lebih efisien.</h5>
+                    <div class="author-date text-light opacity-75">Oleh Gimmy Davis &nbsp;|&nbsp; Feb 4, 2023</div>
+                  </div>
+                </div>
+              </a>
+
+              <a href="" class="col-md-6 text-decoration-none text-reset">
+                <div class="image-overlay-card" style="height: 250px">
+                  <img src="https://images.unsplash.com/photo-1610312278520-bcc893a3ff1d?auto=format&fit=crop&q=80&w=400" alt="Pompa Minyak" />
+                  <div class="overlay-content p-3">
+                    <h5 class="mb-1 text-white fs-6">Harga minyak kembali turun karena bayang-bayang perang dagang dan kekhawatiran akan permintaan menghantui pasar.</h5>
+                    <div class="author-date text-light opacity-75">Oleh Gimmy Davis &nbsp;|&nbsp; Feb 4, 2023</div>
+                  </div>
+                </div>
+              </a>
+
+              <a href="" class="col-md-6 text-decoration-none text-reset bg-light p-3">
+                <h5 class="fw-bold">Warga Eropa adalah peminum alkohol terberat di dunia: Bagaimana perbandingan antar negara?</h5>
+                <div class="author-date mb-2">Oleh Gimmy Davis &nbsp;|&nbsp; Feb 4, 2023</div>
+                <p class="small text-muted">
+                  Konsumsi alkohol per kapita secara keseluruhan menurun sebesar 2,5 liter (21 persen) antara tahun 2000 dan 2019 di Wilayah Eropa WHO, yang mencakup wilayah geografis yang luas dengan 53 negara...
+                </p>
+              </a>
+
+              <a href="" class="col-md-6 text-decoration-none text-reset">
+                <div class="image-overlay-card image-overlay-card w-100 h-100 object-fit-cover">
+                  <img src="https://plus.unsplash.com/premium_photo-1661818927968-c15e78ea3c5a?q=80&w=1171&auto=format&fit=crop&q=80&w=400  " alt="Dodo" />
+                  <div class="overlay-content p-3">
+                    <h5 class="mb-1 text-white fs-6">Sebuah Perusahaan 'De-ekstinsi' Ingin Menghidupkan Kembali Dodo</h5>
+                    <div class="author-date text-light opacity-75">Oleh Gimmy Davis &nbsp;|&nbsp; Feb 4, 2023</div>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <div class="text-center mt-4">
+              <button class="btn text-white rounded-0 px-4 py-2" style="background-color: var(--dark-brown)">Lainnya</button>
+            </div>
+          </div>
+
+          <div class="col-lg-4 bg-white p-4">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+              <h4 class="mb-0 fs-5" style="font-family: var(--font-sans); color: var(--text-dark)">Sedang Tren</h4>
+              <button class="btn btn-dark btn-sm rounded-0" style="font-size: 0.7rem">Lihat Semua</button>
+            </div>
+
+            <div class="trending-list">
+              <a href="" class="d-flex gap-3 trending-item text-decoration-none text-reset">
+                <img src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&q=80&w=100" alt="Balon" class="trending-img" />
+                <div>
+                  <h6 class="trending-title">AS menembak jatuh balon yang diduga milik China di atas pantai Atlantik.</h6>
+                  <div class="author-date">Oleh Jane Meldred &nbsp;|&nbsp; Feb 4, 2023</div>
+                </div>
+              </a>
+              <a href="" class="d-flex gap-3 trending-item text-decoration-none text-reset">
+                <img src="https://images.unsplash.com/photo-1578301978018-3005759f48f7?auto=format&fit=crop&q=80&w=100" alt="Lukisan" class="trending-img" />
+                <div>
+                  <h6 class="trending-title">Kecerdasan Buatan Menunjukkan Bahwa Potret Madonna Ini Mungkin Karya Raphael</h6>
+                  <div class="author-date">Oleh Aliya Yupsito &nbsp;|&nbsp; Feb 4, 2023</div>
+                </div>
+              </a>
+              <a href="" class="d-flex gap-3 trending-item text-decoration-none text-reset">
+                <img src="https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&q=80&w=100" alt="Lebron" class="trending-img" />
+                <div>
+                  <h6 class="trending-title">LeBron James Terus Menjadi Sorotan Dunia</h6>
+                  <div class="author-date">Oleh Jacky Reacher &nbsp;|&nbsp; Feb 4, 2023</div>
+                </div>
+              </a>
+              <a href="" class="d-flex gap-3 trending-item text-decoration-none text-reset">
+                <img src="https://images.unsplash.com/photo-1584288410712-4fb32dd45bc0?auto=format&fit=crop&q=80&w=100" alt="Perang" class="trending-img" />
+                <div>
+                  <h6 class="trending-title">Perang Rusia-Ukraina: 'satu-satunya jalan menuju perdamaian'.</h6>
+                  <div class="author-date">Oleh Aliya Yupsito &nbsp;|&nbsp; Feb 4, 2023</div>
+                </div>
+              </a>
+              <a href="" class="d-flex gap-3 trending-item text-decoration-none text-reset">
+                <img src="https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?auto=format&fit=crop&q=80&w=100" alt="Planet" class="trending-img" />
+                <div>
+                  <h6 class="trending-title">NASA dan DARPA sedang mengerjakan roket bertenaga nuklir yang berpotensi...</h6>
+                  <div class="author-date">Oleh Mary Rystern &nbsp;|&nbsp; Feb 4, 2023</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-2 mb-3 mb-md-0 text-center text-md-start">
+            <a href="#" class="brand-logo">BeritaKu</a>
+          </div>
+
+          <div class="col-md-7 mb-4 mb-md-0">
+            <div class="d-flex justify-content-center justify-content-md-start flex-wrap gap-3">
+              <a href="#">Kebijakan Privasi</a>
+              <a href="#">Ketentuan Layanan</a>
+              <a href="#">Kebijakan Hak Cipta</a>
+              <a href="#">Data Kebijakan Data</a>
+              <a href="#">Aksesibilitas</a>
+              <a href="#">Bantuan</a>
+            </div>
+            <div class="mt-3 text-center text-md-start">© 2023 Newsletter, All rights reserved</div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="row text-center text-md-start">
+              <div class="col-6">
+                <ul class="list-unstyled lh-lg">
+                  <li><a href="#">Politik</a></li>
+                  <li><a href="#">Dunia</a></li>
+                  <li><a href="#">Ekonomi</a></li>
+                  <li><a href="#">Sains & Teknologi</a></li>
+                  <li><a href="#">Bisnis</a></li>
+                </ul>
+              </div>
+              <div class="col-6">
+                <ul class="list-unstyled lh-lg">
+                  <li><a href="#">Travel</a></li>
+                  <li><a href="#">Iklim</a></li>
+                  <li><a href="#">Gaya Hidup</a></li>
+                  <li><a href="#">Makanan</a></li>
+                  <li><a href="#">Olahraga</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      (function () {
+        var el = document.getElementById("heroCarousel");
+        if (el && window.bootstrap && bootstrap.Carousel) {
+          // initialize carousel with 3s interval
+          new bootstrap.Carousel(el, { interval: 3000, ride: "carousel" });
+        }
+      })();
+    </script>
+  </body>
+</html>
